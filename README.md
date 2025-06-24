@@ -47,7 +47,7 @@ To interact with the OpenAI Realtime servers through text, run
 python realtimeDemo.py
 ```
 
-By default, this code only asks the server to generate text output, so it should be cheaper than trying it out on the [platform.openai.com](https://platform.openai.com).
+If you use`MODALITIES = ["text"]` in [`config.py`](./config.py), this code only asks the server to generate text output, so it should be cheaper than trying it out on the [platform.openai.com](https://platform.openai.com).
 
 ## TCP integration demo - Realtime API Websocket 
 `yourTextApplication` communicates with the `realtimeLocalServer` through the TCP port on your localhost, simulating a case where you may want to use multiple processes--which are not necessarily python processes--that will interact with the Realtime servers.

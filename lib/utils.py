@@ -1,3 +1,17 @@
+from pydub import AudioSegment
+
+# def pcm16_to_audiosegment(pcm_data, sample_width=2, frame_rate=16000, channels=1):
+def pcm16_to_audiosegment(pcm_data, sample_width=2, frame_rate=24000, channels=1):
+    """
+    Convert raw PCM16 bytes to a pydub AudioSegment.
+    """
+    return AudioSegment(
+        data=pcm_data,
+        sample_width=sample_width,  # 2 bytes for PCM16
+        frame_rate=frame_rate,
+        channels=channels
+    )
+
 # Cost tracker for OpenAI's GPT-4o Realtime websocket API.
 # MENU contains the cost info for the models.
 # Cost info here: https://platform.openai.com/docs/pricing#latest-models
@@ -56,7 +70,8 @@ class GptCostTracker(object):
             usage = response["usage"]
             costIndices = self.menu[self.model]
         except Exception as e:
-            print("cannot compute cost for this request {e}")
+            print(response)
+            print(f"cannot compute cost for this request {e}")
             return 0.0
         else:
             cost += usage["input_token_details"]["text_tokens"] * costIndices["text"]["input"]
@@ -79,3 +94,4 @@ class GptCostTracker(object):
                 print("Input tokens: Text=",usage['input_token_details']['text_tokens'],", Cached text=",usage['input_token_details']['cached_tokens_details']['text_tokens'],", Audio=",usage['input_token_details']['audio_tokens'],", Cached audio=",usage['input_token_details']['cached_tokens_details']['audio_tokens'],"; Output tokens: Text=",usage['output_token_details']['text_tokens'],", Audio=",usage['output_token_details']['audio_tokens'],".")
                 print("Last requests cost: $%2.7f, session total cost: $%2.7f" %(self.latestRequestCost, self.totalCost))
             return cost
+        
