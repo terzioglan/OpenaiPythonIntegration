@@ -3,7 +3,7 @@ __pycache__/
 *.pyc
 *.pth
 *.log
-
+*.wav
 
 /audioRecordings/*
 !/audioRecordings/.gitkeep

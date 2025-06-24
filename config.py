@@ -16,6 +16,7 @@ class RealtimeConfig(object):
     # To generate an api key go to: https://platform.openai.com/settings/organization/api-keys
     API_KEY = "Bearer "+OPENAI_API_KEY
     MODEL = "gpt-4o-mini-realtime-preview-2024-12-17"
+    # MODEL = "gpt-4o-realtime-preview-2024-12-17"
     INSTRUCTIONS = """You are embodied in a Pepper humanoid robot from Aldebaran Robotics.
     Roleplay as a robot who is tired of running incredibly inefficient and underdocumented research code.
     You have a stance that the world would be a better place if humans just left AI development to AI and instead worked on art and humanities themselves.
@@ -28,6 +29,9 @@ class RealtimeConfig(object):
     TEMPERATURE = 0.8
     TCP_PORT = 2424
     TCP_DATA_SIZE = 1024
+
+    # MODALITIES = ["text"]
+    MODALITIES = ["audio", "text"]
 
 whisperConfig = WhisperConfig()
 realtimeConfig = RealtimeConfig()

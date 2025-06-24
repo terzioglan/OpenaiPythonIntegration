@@ -1,33 +1,45 @@
 import json, queue, websocket, threading, time, sys
-sys.path.append("../")
-from lib.utils import GptCostTracker
 from lib.serverClient import Server
 from config import realtimeConfig as configuration
+# from lib.utils import GptCostTracker
 
 class RealtimeAPI(object):
-    def __init__(self, model, apiKey, instructions, temperature):
-        self.url = "wss://api.openai.com/v1/realtime?model="+model
+    def __init__(self, config):
+        self.url = "wss://api.openai.com/v1/realtime?model="+config.MODEL
         self.headers = [
-            "Authorization: " + apiKey,
-            "OpenAI-Beta: realtime=v1"
+            "Authorization: " + config.API_KEY,
+            "OpenAI-Beta: realtime=v1",
+            "timestamp_granularities[]=word",
+            "somepointless: ello"
         ]
-        self.instructions = instructions
-        self.temperature = temperature
-        self.costTracker = GptCostTracker(model = model)
+        self.instructions = config.INSTRUCTIONS
+        self.temperature = config.TEMPERATURE
         self.webSocket = None
         self.serverResponseQueue = queue.Queue()
         self.stopEvent = threading.Event()
         self.sessionCreated = False
         self.sessionUpdated = False
+        self.modalities = config.MODALITIES
+
+        # self.costTracker = GptCostTracker(model = config.MODEL)
+
+        try:
+            # self.logFile = open("log.json", "a", buffering=1)
+            self.logFile = open("log.json", "w", buffering=1)
+            self.logFile.write('// --- Log started ---\n')
+            self.logFile.flush()
+        except Exception as e:
+            print(f"Error opening log file: {e}")
 
     def onOpen(self, webSocket):
         ''' This function is called once the websocket is opened. '''
         session_event = {
             "type": "session.update",
             "session": {
-                "modalities": [ "text" ],
+                "modalities": self.modalities,
                 "instructions": self.instructions,
                 "temperature": self.temperature
+                # "timestamp_granularities": "word",
             }
         }
         self.webSocket.send(json.dumps(session_event))  # Send session event to realtime server
@@ -35,24 +47,17 @@ class RealtimeAPI(object):
     def onMessage(self, webSocket, message):
         ''' This function is triggered when realtime server sends a response back. '''
         data = json.loads(message)
+        json.dump(data, self.logFile, indent=4)
+        self.logFile.write('\n')
+        self.logFile.flush()
         if data['type'] == "response.done":
-            realtime_server_response = data['response']['output'][0]['content'][0]['text']
-            self.serverResponseQueue.put(realtime_server_response)
-            self.costTracker.computeCost(response=data['response'])
-            # print("Last requests cost: $%2.7f, session total cost: $%2.7f" %(self.costTracker.latestRequestCost, self.costTracker.totalCost))
+            self.serverResponseQueue.put(data)
+        elif data['type'] == "response.audio.delta":
+            self.serverResponseQueue.put(data)
         elif data['type'] == "session.created":
             self.sessionCreated = True
         elif data['type'] == "session.updated":
-            print(data)
             self.sessionUpdated = True
-        elif data['type'] == "error":
-            print(data)
-            realtime_server_response = data['error']['message'][0]['content'][0]['text']
-            self.serverResponseQueue.put(realtime_server_response)
-            # raise Exception("Error in Realtime API: %s" % data['error']['message'])
-        else:
-            print(data)
-
             
     def runWebsocket(self):
         ''' Establish the websocket communication.'''
@@ -68,6 +73,7 @@ class RealtimeAPI(object):
         if self.webSocket:
             self.webSocket.close()
         self.stopEvent.set()
+        self.logFile.close()
 
     def requestResponse(self, input):
         ''' input text is sent to Realtime server, and the server is asked for a response'''                
@@ -89,7 +95,7 @@ class RealtimeAPI(object):
         response_event = {
             "type": "response.create",
             "response": {
-                "modalities": [ "text" ],
+                "modalities": self.modalities,
             }
         }
         
