@@ -49,8 +49,9 @@ python realtimeDemo.py
 
 By default, this code only asks the server to generate text output, so it should be cheaper than trying it out on the [platform.openai.com](https://platform.openai.com).
 
-
 ## TCP integration demo - Realtime API Websocket 
+`yourTextApplication` communicates with the `realtimeLocalServer` through the TCP port on your localhost, simulating a case where you may want to use multiple processes--which are not necessarily python processes--that will interact with the Realtime servers.
+
 In a terminal window, start the Realtime local server process:
 ```bash
 python realtimeLocalServer.py
@@ -60,9 +61,10 @@ In another terminal window, run your application:
 python yourTextApplication.py
 ```
 
-`yourTextApplication` communicates with the `realtimeLocalServer` through the TCP port on your localhost, simulating a case where you may want to use multiple processes--which are not necessarily python processes--that will interact with the Realtime servers.
-
 ## TCP integration demo - Whisper transcription to Realtime API Websocket 
+`yourAudioApplication` makes two localhost connections through two TCP ports.
+It first communicates with the [`whisperLocalServer`](./whisperLocalServer.py) to transcribe an audio file from the [`RECORDINGS`](./yourAudioApplication.py#L7), and sends the transcription to [`realtimeLocalServer`](./realtimeLocalServer.py) to generate an LLM response.
+
 In a terminal window, start the Whisper transcription local server process:
 ```bash
 python whisperLocalServer.py
@@ -75,6 +77,3 @@ On a third terminal, run your audio to response application,
 ```bash
 python yourAudioApplication.py
 ```
-
-`yourAudioApplication` makes two localhost connections through two TCP ports.
-It first communicates with the [`whisperLocalServer`](./whisperLocalServer.py) to transcribe an audio file from the [`RECORDINGS`](./yourAudioApplication.py#L7), and sends the transcription to [`realtimeLocalServer`](./realtimeLocalServer.py) to generate an LLM response.
