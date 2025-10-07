@@ -3,7 +3,7 @@ channels:
   - pytorch
   - defaults
 dependencies:
-  - pip=25.0=py311h06a4308_0
+  - pip=25.0
   - python=3.11
   - pip:
     - openai-whisper==20240930
