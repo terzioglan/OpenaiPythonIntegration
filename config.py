@@ -30,8 +30,8 @@ class RealtimeConfig(object):
     TCP_PORT = 2424
     TCP_DATA_SIZE = 1024
 
-    # MODALITIES = ["text"]
-    MODALITIES = ["audio", "text"]
+    MODALITIES = ["text"]
+    # MODALITIES = ["audio", "text"]
 
 whisperConfig = WhisperConfig()
 realtimeConfig = RealtimeConfig()
