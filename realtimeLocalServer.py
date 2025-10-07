@@ -6,10 +6,7 @@ from lib.serverClient import Server
 
 if __name__ == "__main__":
     realtimeWebsocket = RealtimeAPI(
-        model=configuration.MODEL,
-        apiKey=configuration.API_KEY,
-        instructions=configuration.INSTRUCTIONS,
-        temperature=configuration.TEMPERATURE,
+        config  = configuration,
         )
     websocketThread = threading.Thread(target=realtimeWebsocket.runWebsocket)
     websocketThread.start()
