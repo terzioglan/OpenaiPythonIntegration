@@ -1,17 +1,3 @@
-from pydub import AudioSegment
-
-# def pcm16_to_audiosegment(pcm_data, sample_width=2, frame_rate=16000, channels=1):
-def pcm16_to_audiosegment(pcm_data, sample_width=2, frame_rate=24000, channels=1):
-    """
-    Convert raw PCM16 bytes to a pydub AudioSegment.
-    """
-    return AudioSegment(
-        data=pcm_data,
-        sample_width=sample_width,  # 2 bytes for PCM16
-        frame_rate=frame_rate,
-        channels=channels
-    )
-
 # Cost tracker for OpenAI's GPT-4o Realtime websocket API.
 # MENU contains the cost info for the models.
 # Cost info here: https://platform.openai.com/docs/pricing#latest-models
