@@ -15,8 +15,13 @@ if __name__ == "__main__":
 
     while True:
         try:
+            print("Waiting for transcription request from local client...")
             audioFilePath = whisperLocalServer.receive(configuration.TCP_DATA_SIZE)["message"]
+            
+            print(f"Transcribing audio file: {audioFilePath}")
             transcription = whisperApi.transcribeAudio(audioFilePath)
+            
+            print(f"Transcription completed: {transcription}")
             whisperLocalServer.send({"message":transcription})
         except KeyboardInterrupt:
             break
