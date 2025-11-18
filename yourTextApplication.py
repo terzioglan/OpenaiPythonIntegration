@@ -20,8 +20,7 @@ if __name__ == "__main__":
             toc = time.time()
             
             print("Processing time: %.2fs" %(toc-tic))
-            print(f"Response: {response}\n")
-            print(f"\nReply:{response['response']['output'][0]['content'][0]['text']}")
+            print(f"\nResponse:{response['response']['output'][0]['content'][0]['text']}")
         except KeyboardInterrupt:
             break
     sys.exit(0)
