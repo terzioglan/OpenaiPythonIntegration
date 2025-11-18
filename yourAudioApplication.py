@@ -25,18 +25,19 @@ if __name__ == "__main__":
         )
     for recording in RECORDINGS:
         try:
+            print(f"Processing: {recording}")
             audioFilePath = recording
             tic = time.time()
             whisperLocalClient.send({"message":audioFilePath})
             transcription = whisperLocalClient.receive()["message"]
-            print(f"Transcription: {transcription}\n")
-
+            
+            print(f"User: {transcription}")
             realtimeLocalClient.send({"message":transcription})
             response = realtimeLocalClient.receive()["message"]
             
-            print(f"Response: {response}\n")
             toc = time.time()
             print("Processing time: %.2fs" %(toc-tic))
+            print(f"Response: {response['response']['output'][0]['content'][0]['text']}\n")
             time.sleep(1.0)
         except KeyboardInterrupt:
             break
