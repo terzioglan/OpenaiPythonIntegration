@@ -1,13 +1,13 @@
 import time, sys
 sys.path.append("../")
 from config import realtimeConfig as configuration
-from lib.serverClient import Client
+from lib.ServerClient import Client
 
 if __name__ == "__main__":
     realtimeLocalClient = Client(
-        host='localhost',
+        host=configuration.TCP_HOST,
         port=configuration.TCP_PORT,
-        size=configuration.TCP_DATA_SIZE
+        size=configuration.TCP_SIZE
         )
     while True:
         try:
@@ -15,7 +15,7 @@ if __name__ == "__main__":
             if inputText == "exit":
                 break
             tic = time.time()
-            realtimeLocalClient.send({"message":inputText})
+            realtimeLocalClient.send( message = inputText )
             response = realtimeLocalClient.receive()["message"]
             toc = time.time()
             

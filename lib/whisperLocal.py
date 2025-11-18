@@ -1,7 +1,7 @@
 import sys, os, torch, whisper
 sys.path.append("../")
 from config import whisperConfig as configuration
-from lib.serverClient import Server
+from lib.ServerClient import Server
 
 
 class WhisperAPI(object):

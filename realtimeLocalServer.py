@@ -2,7 +2,7 @@ import threading, time, sys
 sys.path.append("../")
 from lib.realtimeWebsocket import RealtimeAPI
 from config import realtimeConfig as configuration
-from lib.serverClient import Server
+from lib.ServerClient import Server
 
 if __name__ == "__main__":
     realtimeWebsocket = RealtimeAPI(
@@ -15,7 +15,7 @@ if __name__ == "__main__":
     realtimeLocalServer = Server(
         host="localhost",
         port=configuration.TCP_PORT,
-        size=configuration.TCP_DATA_SIZE
+        size=configuration.TCP_SIZE
         )
     print("Done.")
 
@@ -27,16 +27,19 @@ if __name__ == "__main__":
 
     while True:
         try:
-            data = realtimeLocalServer.receive(configuration.TCP_DATA_SIZE)
-            print("Received request from local client.")
-            print("Requesting response from realtime API.")
-            realtimeWebsocket.requestResponse(data["message"])
-            while(realtimeWebsocket.serverResponseQueue.empty()):
+            data = realtimeLocalServer.receive()
+            if data:
+                print("Received request from local client.")
+                print("Requesting response from realtime API.")
+                realtimeWebsocket.requestResponse(data["message"])
+                while(realtimeWebsocket.serverResponseQueue.empty()):
+                    pass
+                response = realtimeWebsocket.serverResponseQueue.get()
+                print(f"Response received: {response}")
+                print("Sending response to local client.")
+                realtimeLocalServer.send( message = response )
+            else:
                 pass
-            response = realtimeWebsocket.serverResponseQueue.get()
-            print(f"Response received: {response}")
-            print("Sending response to local client.")
-            realtimeLocalServer.send({"message" : response})
         except KeyboardInterrupt:
             break
 

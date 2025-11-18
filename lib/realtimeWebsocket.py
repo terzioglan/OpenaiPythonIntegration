@@ -1,5 +1,5 @@
 import json, queue, websocket, threading, time, sys
-from lib.serverClient import Server
+from lib.ServerClient import Server
 from config import realtimeConfig as configuration
 # from lib.utils import GptCostTracker
 

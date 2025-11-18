@@ -2,7 +2,7 @@ import sys
 sys.path.append("../")
 from lib.whisperLocal import WhisperAPI
 from config import whisperConfig as configuration
-from lib.serverClient import Server
+from lib.ServerClient import Server
 
 if __name__ == "__main__":
     whisperApi = WhisperAPI(whisperModelPath=configuration.WHISPER_MODEL_FILE,)
@@ -10,19 +10,22 @@ if __name__ == "__main__":
     whisperLocalServer = Server(
         host="localhost",
         port=configuration.TCP_PORT,
-        size=configuration.TCP_DATA_SIZE
+        size=configuration.TCP_SIZE
         )
 
     while True:
         try:
             print("Waiting for transcription request from local client...")
-            audioFilePath = whisperLocalServer.receive(configuration.TCP_DATA_SIZE)["message"]
+            audioFilePath = whisperLocalServer.receive()["message"]
             
-            print(f"Transcribing audio file: {audioFilePath}")
-            transcription = whisperApi.transcribeAudio(audioFilePath)
-            
-            print(f"Transcription completed: {transcription}")
-            whisperLocalServer.send({"message":transcription})
+            if audioFilePath:
+                print(f"Transcribing audio file: {audioFilePath}")
+                transcription = whisperApi.transcribeAudio(audioFilePath)
+                
+                print(f"Transcription completed: {transcription}")
+                whisperLocalServer.send(message = transcription )
+            else:
+                pass
         except KeyboardInterrupt:
             break
     

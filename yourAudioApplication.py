@@ -2,7 +2,7 @@ import sys, time
 sys.path.append("../")
 from config import realtimeConfig as realtimeConfiguration
 from config import whisperConfig as whisperConfiguration
-from lib.serverClient import Client
+from lib.ServerClient import Client
 
 RECORDINGS = [
     "./audioRecordings/goodbye-38072.mp3",
@@ -16,23 +16,23 @@ if __name__ == "__main__":
     realtimeLocalClient = Client(
         host='localhost',
         port=realtimeConfiguration.TCP_PORT,
-        size=realtimeConfiguration.TCP_DATA_SIZE
+        size=realtimeConfiguration.TCP_SIZE
         )
     whisperLocalClient = Client(
         host='localhost',
         port=whisperConfiguration.TCP_PORT,
-        size=whisperConfiguration.TCP_DATA_SIZE
+        size=whisperConfiguration.TCP_SIZE
         )
     for recording in RECORDINGS:
         try:
             print(f"Processing: {recording}")
             audioFilePath = recording
             tic = time.time()
-            whisperLocalClient.send({"message":audioFilePath})
+            whisperLocalClient.send(message = audioFilePath )
             transcription = whisperLocalClient.receive()["message"]
             
             print(f"User: {transcription}")
-            realtimeLocalClient.send({"message":transcription})
+            realtimeLocalClient.send(message = transcription )
             response = realtimeLocalClient.receive()["message"]
             
             toc = time.time()

@@ -9,8 +9,9 @@ class WhisperConfig(object):
     # If you don't already have a local model downloaded, the system will automatically
     # download it the first time you run the code.
     WHISPER_MODEL_FILE = "whisper_turbo_local_model.pth"
+    TCP_HOST = "localhost"
     TCP_PORT = 4242
-    TCP_DATA_SIZE = 1024
+    TCP_SIZE = 1024
     
 class RealtimeConfig(object):
     # To generate an api key go to: https://platform.openai.com/settings/organization/api-keys
@@ -27,11 +28,17 @@ class RealtimeConfig(object):
     State <LONG_SILENCE>: There was a long silence in your conversation with the human. Re-initiate the conversation.
     """
     TEMPERATURE = 0.8
+    TCP_HOST = "localhost"
     TCP_PORT = 2424
-    TCP_DATA_SIZE = 1024
+    TCP_SIZE = 1024
 
     MODALITIES = ["text"]
     # MODALITIES = ["audio", "text"]
 
 whisperConfig = WhisperConfig()
 realtimeConfig = RealtimeConfig()
+
+# TCP ServerClient common configuration
+ENCODING = "utf-8"
+TERMINATION_BYTE = b"\x00"
+RECEIVE_PACKAGE_TIMEOUT = 3.0   # seconds
